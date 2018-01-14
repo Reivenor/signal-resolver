@@ -7,7 +7,7 @@ import akka.actor.ActorRef
   */
 case class Task(aSignal:List[Double],
                 bSignal:List[Double],
-                function: (List[Double],List[Double])=>(List[Double], Double),
-                index:Int,//A => B
-                sender:ActorRef
+                function: (List[Double],List[Double])=>(List[Double], Double),//A => B
+                sender:ActorRef,
+                channelName:Int //TODO complite channels enumeration
                )

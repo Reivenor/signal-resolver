@@ -8,18 +8,21 @@ import akka.actor.{ActorContext, ActorRef, Props}
 class SimpleRouter[A](actor:Class[A], count:Int, context:ActorContext, _master:ActorRef) {
   var workersList:List[ActorRef] = Nil
   val master = _master
+
+  private var lastFreeWorkerId:Int = 0 //Индекс следующего актора для равномерного распределения заданий
+
   println("Set master as " + master.path.toString)
 
   for(id <- 0 to count){
-    //if(id)//TODO не по одному сообщению на исполнитель
     workersList :::= List(
       context.actorOf(Props(actor),
         id.toString))
     println("Actor with ID " + id + " created")
   }
 
-  def send(message:Any, id:Int): Unit ={
-    workersList(id) ! message
-    println("Task sended to worker " + id)
+  def send(message:Any): Unit ={
+    workersList(lastFreeWorkerId) ! message
+    println("Task sended to worker " + lastFreeWorkerId)
+    lastFreeWorkerId = if(lastFreeWorkerId < count) lastFreeWorkerId + 1 else 0
   }
 }
