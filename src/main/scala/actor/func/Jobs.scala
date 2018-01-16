@@ -12,7 +12,7 @@ object Jobs {
     val matrix = Func.transponce(Func.buildMatrix(bSignal, aSignal))
     regression.newSampleData(bSignal.toArray, matrix)
     (regression.estimateRegressionParameters().toList,
-      regression.calculateResidualSumOfSquares())
+      regression.estimateResiduals().toList)
 
   }
 
